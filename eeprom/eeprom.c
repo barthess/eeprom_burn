@@ -168,32 +168,32 @@ static size_t read(void *ip, uint8_t *bp, size_t n){
 
   /* Stupid STM32 I2C cell does not allow to read less than 2 bytes.
      So we must read 2 bytes and return needed one. */
-#if (defined(STM32F4XX) || defined(STM32F2XX) || defined(STM32F1XX) || \
-                                                 defined(STM32L1XX))
-  if (n == 1){
-    uint8_t __buf[2];
-    /* if NOT last byte of file requested */
-    if ((getposition(ip) + 1) < getsize(ip)){
-      if (read(ip, __buf, 2) == 2){
-        lseek(ip, (getposition(ip) + 1));
-        bp[0] = __buf[0];
-        return 1;
-      }
-      else
-        return 0;
-    }
-    else{
-      lseek(ip, (getposition(ip) - 1));
-      if (read(ip, __buf, 2) == 2){
-        lseek(ip, (getposition(ip) + 2));
-        bp[0] = __buf[1];
-        return 1;
-      }
-      else
-        return 0;
-    }
-  }
-#endif
+//#if (defined(STM32F4XX) || defined(STM32F2XX) || defined(STM32F1XX) || \
+//                                                 defined(STM32L1XX))
+//  if (n == 1){
+//    uint8_t __buf[2];
+//    /* if NOT last byte of file requested */
+//    if ((getposition(ip) + 1) < getsize(ip)){
+//      if (read(ip, __buf, 2) == 2){
+//        lseek(ip, (getposition(ip) + 1));
+//        bp[0] = __buf[0];
+//        return 1;
+//      }
+//      else
+//        return 0;
+//    }
+//    else{
+//      lseek(ip, (getposition(ip) - 1));
+//      if (read(ip, __buf, 2) == 2){
+//        lseek(ip, (getposition(ip) + 2));
+//        bp[0] = __buf[1];
+//        return 1;
+//      }
+//      else
+//        return 0;
+//    }
+//  }
+//#endif
 
   /* call low level function */
   status  = eeprom_read(getposition(ip), bp, n);

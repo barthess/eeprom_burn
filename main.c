@@ -410,7 +410,7 @@ void __burn(BaseSequentialStream *chp, uint8_t pattern){
   eeprom_cycle += BKP->DR2;
 
   if (BKP->DR3 == 1){
-    chprintf(chp, "EEPROM exhausted at %u try\n", eeprom_cycle);
+    //chprintf(chp, "EEPROM exhausted at %u try\n", eeprom_cycle);
     return;
   }
 
@@ -435,7 +435,7 @@ void __burn(BaseSequentialStream *chp, uint8_t pattern){
   }
 
   /* Print note to console and increment cycle counter */
-  chprintf(chp, "EEPROM burn %u \n", eeprom_cycle);
+  //chprintf(chp, "EEPROM burn %u \n", eeprom_cycle);
   eeprom_cycle++;
   BKP->DR2 = eeprom_cycle & 0xFFFF;
   BKP->DR1 = (eeprom_cycle >> 16) & 0xFFFF;
@@ -453,8 +453,6 @@ static msg_t Burner(void *arg) {
 
   while (TRUE) {
     __burn(chp, 0x00);
-    __burn(chp, 0x55);
-    __burn(chp, 0xAA);
     __burn(chp, 0xFF);
   }
   return 0;
@@ -496,12 +494,16 @@ int main(void) {
    */
   chThdCreateStatic(waBurner, sizeof(waBurner), NORMALPRIO, Burner, &SDU1);
 
-  EepromOpen(&EepromFile);
   i2cStart(&I2CD1, &i2cfg1);
+  EepromOpen(&EepromFile);
 
   /* tune ports for I2C1*/
   palSetPadMode(IOPORT2, 6, PAL_MODE_STM32_ALTERNATE_OPENDRAIN);
   palSetPadMode(IOPORT2, 7, PAL_MODE_STM32_ALTERNATE_OPENDRAIN);
+
+//  BKP->DR1 = 0;
+//  BKP->DR2 = 0;
+//  BKP->DR3 = 0;
 
   /*
    * Normal main() thread activity, in this demo it does nothing except

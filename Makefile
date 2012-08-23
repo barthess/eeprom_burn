@@ -214,5 +214,5 @@ include $(CHIBIOS)/os/ports/GCC/ARMCMx/rules.mk
 # User difined rules here
 MAKE_ALL_RULE_HOOK: res_usage
 
-res_usage: $(BUILDDIR)/$(PROJECT).map $(BUILDDIR)/$(PROJECT).bin
+res_usage: $(BUILDDIR)/$(PROJECT).bin
 	./res_usage.sh	
